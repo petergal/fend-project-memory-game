@@ -5,10 +5,7 @@
 let openCards = new Array();
 let moveCounter = Number(0);
 
-/*
- * inital function to setup the game
- * called from index.html and 'Play Again' button.
- */
+// inital function to setup the game
 function init() {
   initScorePanel();
   let newCardList = createNewDeck();
@@ -67,13 +64,18 @@ document.getElementsByClassName('restart')[0].addEventListener('click', init);
 
 
 function cardClicked(evt) {
-  //timeout running
-  if (openCards.length === 2) {
+  if (timeoutRunning()) {
     return;
   }
   showCard(evt);
   saveCard(evt.target);
   compareCards();
+}
+
+function timeoutRunning() {
+  if (openCards.length === 2) {
+    return true;
+  }
 }
 
 function showCard(evt) {
@@ -88,7 +90,6 @@ function saveCard(cardElement) {
 function compareCards() {
   if (openCards.length === 2) {
     incMoveCounter();
-    displayMoveCounter();
     if (openCards[0].firstElementChild.className === openCards[1].firstElementChild
       .className) {
       setTimeout(function setMatched() {
@@ -96,44 +97,44 @@ function compareCards() {
         openCards[1].classList.add('match');
         openCards = new Array();
         if (document.getElementsByClassName('match').length === 16) {
-          displayResult();
+          setScorePanel();
         }
       }, 500);
     } else {
       setTimeout(function closeCards() {
-        setClassClosed(openCards[0]);
-        setClassClosed(openCards[1]);
+        setCardClosed(openCards[0]);
+        setCardClosed(openCards[1]);
         openCards = new Array();
       }, 1000);
     }
   }
 }
 
-function setClassClosed(element) {
+function setCardClosed(element) {
   element.classList.remove('open');
   element.classList.remove('show');
 }
 
 function incMoveCounter() {
   moveCounter += 1;
-}
-
-function displayMoveCounter() {
   document.getElementsByClassName('moves')[0].textContent = moveCounter;
 }
 
-function displayResult() {
+function setScorePanel() {
   let nodeList = document.querySelectorAll('.fa-star-o');
+  //first star
   if (moveCounter < 28) {
     setStar(nodeList[0]);
   } else if (moveCounter < 32) {
     setStarHalf(nodeList[0]);
   }
+  //second star
   if (moveCounter < 20) {
     setStar(nodeList[1]);
   } else if (moveCounter < 24) {
     setStarHalf(nodeList[1]);
   }
+  //third star
   if (moveCounter < 12) {
     setStar(nodeList[2]);
   } else if (moveCounter < 16) {
