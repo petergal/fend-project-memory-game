@@ -24,6 +24,9 @@ function createNewDeck() {
   const cardList = shuffle([...document.getElementsByClassName('card')]);
   const newCardList = new Array();
   cardList.forEach(function(element) {
+    element.classList.remove('match');
+    element.classList.remove('open');
+    element.classList.remove('show');
     newCardList.push(element);
   });
   return newCardList;
@@ -94,7 +97,7 @@ function compareCards() {
         setCardClosed(openCards[0]);
         setCardClosed(openCards[1]);
         openCards = new Array();
-      }, 750);
+      }, 900);
     }
   }
 }
