@@ -1,14 +1,10 @@
-//TODO
-//implement result page
-
 let openCards = new Array();
 let moveCounter = Number(0);
 
-// inital function to setup the game
+// setup the game
 function init() {
   initScorePanel();
   let newCardList = createNewDeck();
-  removePreviousDeck();
   insertNewDeck(newCardList);
 }
 
@@ -32,19 +28,20 @@ function createNewDeck() {
   return newCardList;
 }
 
-function removePreviousDeck() {
-  while (document.querySelector('.deck').firstChild) {
-    document.querySelector('.deck').removeChild(document.querySelector('.deck')
-      .firstChild);
-  }
-}
-
 function insertNewDeck(newCardList) {
   const fragment = document.createDocumentFragment();
   newCardList.forEach(function(element) {
     fragment.appendChild(element);
   });
+  removePreviousDeck();
   document.querySelector('.deck').appendChild(fragment);
+}
+
+function removePreviousDeck() {
+  while (document.querySelector('.deck').firstChild) {
+    document.querySelector('.deck').removeChild(document.querySelector('.deck')
+      .firstChild);
+  }
 }
 
 // Eventlistener for cards
@@ -88,7 +85,7 @@ function compareCards() {
         openCards[0].classList.add('match');
         openCards[1].classList.add('match');
         openCards = new Array();
-        if (document.getElementsByClassName('match').length === 16) {
+        if (allCardsMatched()) {
           setScorePanel();
         }
       }, 500);
@@ -102,14 +99,15 @@ function compareCards() {
   }
 }
 
-function setCardClosed(element) {
-  element.classList.remove('open');
-  element.classList.remove('show');
-}
-
 function incMoveCounter() {
   moveCounter += 1;
   document.getElementsByClassName('moves')[0].textContent = moveCounter;
+}
+
+function allCardsMatched() {
+  if (document.getElementsByClassName('match').length === 16) {
+    return true;
+  }
 }
 
 function setScorePanel() {
@@ -144,17 +142,10 @@ function setStarHalf(node) {
   node.classList.add('fa-star-half-o');
 }
 
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
-
+function setCardClosed(element) {
+  element.classList.remove('open');
+  element.classList.remove('show');
+}
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
