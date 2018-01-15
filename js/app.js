@@ -1,5 +1,6 @@
 let openCards = new Array();
 let moveCounter = Number(0);
+let starCounter = Number(0);
 
 // setup the game
 function init() {
@@ -14,6 +15,9 @@ function initScorePanel() {
     `<li><i class="fa fa-star-o"></i></li>
     <li><i class="fa fa-star-o"></i></li>
     <li><i class="fa fa-star-o"></i></li>`;
+  openCards = new Array();
+  moveCounter = Number(0);
+  starCounter = Number(0);
 }
 
 function createNewDeck() {
@@ -33,14 +37,17 @@ function insertNewDeck(newCardList) {
   newCardList.forEach(function(element) {
     fragment.appendChild(element);
   });
-  removePreviousDeck();
+  removeCurrentDeck();
   document.querySelector('.deck').appendChild(fragment);
 }
 
-function removePreviousDeck() {
-  while (document.querySelector('.deck').firstChild) {
-    document.querySelector('.deck').removeChild(document.querySelector('.deck')
-      .firstChild);
+function removeCurrentDeck() {
+  if (document.querySelector('.deck') !== null) {
+    while (document.querySelector('.deck').firstChild) {
+      document.querySelector('.deck').removeChild(document.querySelector(
+          '.deck')
+        .firstChild);
+    }
   }
 }
 
@@ -87,6 +94,7 @@ function compareCards() {
         openCards = new Array();
         if (allCardsMatched()) {
           setScorePanel();
+          showResultPage();
         }
       }, 500);
     } else {
@@ -135,11 +143,32 @@ function setScorePanel() {
 function setStar(node) {
   node.classList.remove('fa-star-o');
   node.classList.add('fa-star');
+  starCounter += 1;
 }
 
 function setStarHalf(node) {
   node.classList.remove('fa-star-o');
   node.classList.add('fa-star-half-o');
+  starCounter += 0.5;
+}
+
+function showResultPage() {
+  const headerElement = document.querySelector('header');
+  headerElement.parentElement.removeChild(headerElement);
+  const scoreElement = document.querySelector('.score-panel');
+  scoreElement.parentElement.removeChild(scoreElement);
+  const deckElement = document.querySelector('.deck');
+  deckElement.parentElement.removeChild(deckElement);
+  const containerElement = document.querySelector('.container');
+  const htmlTextToAdd =
+    `<div class="result">
+    <h2>Congratulations! You did it!</h2>
+    <p >
+      With some Moves and Stars...
+    </p>
+      <button  name="button">Klick mich</button>
+    </div>`
+  containerElement.insertAdjacentHTML('afterbegin', htmlTextToAdd);
 }
 
 function setCardClosed(element) {
