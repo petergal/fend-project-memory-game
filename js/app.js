@@ -1,11 +1,10 @@
 //TODO
 //initScorePanel: reset starElements
-//displayResult: fix/test
 //implement result page
-//openCards redesign
 
 let openCards = new Array();
 let moveCounter = Number(0);
+
 /*
  * inital function to setup the game
  * called from index.html and 'Play Again' button.
@@ -75,9 +74,6 @@ function cardClicked(evt) {
   showCard(evt);
   saveCard(evt.target);
   compareCards();
-  if (document.getElementsByClassName('match').length === 16) {
-    displayResult();
-  }
 }
 
 function showCard(evt) {
@@ -99,6 +95,9 @@ function compareCards() {
         openCards[0].classList.add('match');
         openCards[1].classList.add('match');
         openCards = new Array();
+        if (document.getElementsByClassName('match').length === 16) {
+          displayResult();
+        }
       }, 500);
     } else {
       setTimeout(function closeCards() {
@@ -124,28 +123,32 @@ function displayMoveCounter() {
 }
 
 function displayResult() {
-  if (moveCounter < 20) {
-    document.getElementsByClassName('stars')[0].childNodes.toggle('fa-star');
-    document.getElementsByClassName('stars')[1].childNodes.toggle('fa-star');
-    document.getElementsByClassName('stars')[2].childNodes.toggle('fa-star');
-  } else if (moveCounter < 25) {
-    document.getElementsByClassName('stars')[0].childNodes.toggle('fa-star');
-    document.getElementsByClassName('stars')[1].childNodes.toggle('fa-star');
-    document.getElementsByClassName('stars')[2].childNodes.toggle(
-      'fa-star-half-o');
-  } else if (moveCounter < 30) {
-    document.getElementsByClassName('stars')[0].childNodes.toggle('fa-star');
-    document.getElementsByClassName('stars')[1].childNodes.toggle('fa-star');
-  } else if (moveCounter < 35) {
-    document.getElementsByClassName('stars')[0].childNodes.toggle('fa-star');
-    document.getElementsByClassName('stars')[1].childNodes.toggle(
-      'fa-star-half-o');
-  } else if (moveCounter < 40) {
-    document.getElementsByClassName('stars')[0].childNodes.toggle('fa-star');
-  } else if (moveCounter < 45) {
-    document.getElementsByClassName('stars')[0].childNodes.toggle(
-      'fa-star-half-o');
+  let nodeList = document.querySelectorAll('.fa-star-o');
+  if (moveCounter < 28) {
+    setStar(nodeList[0]);
+  } else if (moveCounter < 32) {
+    setStarHalf(nodeList[0]);
   }
+  if (moveCounter < 20) {
+    setStar(nodeList[1]);
+  } else if (moveCounter < 24) {
+    setStarHalf(nodeList[1]);
+  }
+  if (moveCounter < 12) {
+    setStar(nodeList[2]);
+  } else if (moveCounter < 16) {
+    setStarHalf(nodeList[2]);
+  }
+}
+
+function setStar(node) {
+  node.classList.remove('fa-star-o');
+  node.classList.add('fa-star');
+}
+
+function setStarHalf(node) {
+  node.classList.remove('fa-star-o');
+  node.classList.add('fa-star-half-o');
 }
 
 /*
