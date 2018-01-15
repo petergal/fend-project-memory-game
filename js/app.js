@@ -1,5 +1,4 @@
 //TODO
-//initScorePanel: reset starElements
 //implement result page
 
 let openCards = new Array();
@@ -15,20 +14,10 @@ function init() {
 
 function initScorePanel() {
   document.getElementsByClassName('moves')[0].textContent = 0;
-  // let starElements = document.querySelector('.fa-star');
-  // if (starElements !== null) {
-  //   starElements.forEach(function(element) {
-  //     element.classList.remove('fa-star');
-  //     element.classList.add('fa-star-o');
-  //   });
-  // }
-  // starElements = document.querySelector('.fa-star-half-o');
-  // if (starElements !== null) {
-  //   starElements.forEach(function(element) {
-  //     element.classList.remove('fa-star-half-o');
-  //     element.classList.add('fa-star-o');
-  //   });
-  // }
+  document.querySelector('.stars').innerHTML =
+    `<li><i class="fa fa-star-o"></i></li>
+    <li><i class="fa fa-star-o"></i></li>
+    <li><i class="fa fa-star-o"></i></li>`;
 }
 
 function createNewDeck() {
@@ -105,7 +94,7 @@ function compareCards() {
         setCardClosed(openCards[0]);
         setCardClosed(openCards[1]);
         openCards = new Array();
-      }, 1000);
+      }, 750);
     }
   }
 }
