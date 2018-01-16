@@ -118,3 +118,16 @@ h1 {
   float: right;
   cursor: pointer;
 }
+
+@media only screen and (max-height: 600px) {
+  .deck {
+    width: 460px;
+    min-height: 420px;
+    padding: 22px;
+    border-radius: 8px;
+  }
+  .deck .card {
+    height: 88px;
+    width: 88px;
+  }
+}
