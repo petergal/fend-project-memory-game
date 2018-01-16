@@ -184,7 +184,7 @@ function insertResultPage() {
     `<div class="result">
     <h2>Congratulations! You did it!</h2>
     <p >
-      With <span class="moves"></span> Moves and <span class="starCounter"></span> Stars!
+      With <span class="moves"></span> Moves and <span class="starCounter"></span> <span class="starText">Stars!</span>
     </p>
       <button  name="button">Klick mich</button>
     </div>`
@@ -195,6 +195,10 @@ function insertResultPage() {
 
 function updateStarCounter() {
   document.getElementsByClassName('starCounter')[0].textContent = starCounter;
+  if (starCounter === 1) {
+    document.getElementsByClassName('starText')[0].textContent = 'Star!';
+  }
+
 }
 
 function setCardClosed(element) {
@@ -214,6 +218,6 @@ function shuffle(array) {
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
   }
-  
+
   return array;
 }
