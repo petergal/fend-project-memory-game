@@ -12,12 +12,12 @@ function init() {
 function initScorePanel() {
   document.getElementsByClassName('moves')[0].textContent = 0;
   document.querySelector('.stars').innerHTML =
-    `<li><i class="fa fa-star-o"></i></li>
-    <li><i class="fa fa-star-o"></i></li>
-    <li><i class="fa fa-star-o"></i></li>`;
+    `<li><i class="fa fa-star"></i></li>
+    <li><i class="fa fa-star"></i></li>
+    <li><i class="fa fa-star"></i></li>`;
   openCards = new Array();
   moveCounter = Number(0);
-  starCounter = Number(0);
+  starCounter = Number(3);
 }
 
 function createNewDeck() {
@@ -86,6 +86,7 @@ function saveCard(cardElement) {
 function compareCards() {
   if (openCards.length === 2) {
     incMoveCounter();
+    setScorePanel();
     if (openCards[0].firstElementChild.className === openCards[1].firstElementChild
       .className) {
       setTimeout(function setMatched() {
@@ -93,7 +94,6 @@ function compareCards() {
         openCards[1].classList.add('match');
         openCards = new Array();
         if (allCardsMatched()) {
-          setScorePanel();
           showResultPage();
         }
       }, 500);
@@ -109,6 +109,10 @@ function compareCards() {
 
 function incMoveCounter() {
   moveCounter += 1;
+  updateMoveCounter();
+}
+
+function updateMoveCounter() {
   document.getElementsByClassName('moves')[0].textContent = moveCounter;
 }
 
@@ -119,56 +123,78 @@ function allCardsMatched() {
 }
 
 function setScorePanel() {
-  let nodeList = document.querySelectorAll('.fa-star-o');
-  //first star
-  if (moveCounter < 28) {
-    setStar(nodeList[0]);
-  } else if (moveCounter < 32) {
-    setStarHalf(nodeList[0]);
-  }
-  //second star
-  if (moveCounter < 20) {
-    setStar(nodeList[1]);
-  } else if (moveCounter < 24) {
-    setStarHalf(nodeList[1]);
-  }
-  //third star
-  if (moveCounter < 12) {
-    setStar(nodeList[2]);
-  } else if (moveCounter < 16) {
-    setStarHalf(nodeList[2]);
+  let stars = document.getElementsByClassName('stars')[0];
+  switch (moveCounter) {
+    case 12:
+      setStarHalf(stars.children[2].children[0]);
+      break;
+    case 16:
+      setStarEmpty(stars.children[2].children[0]);
+      break;
+    case 20:
+      setStarHalf(stars.children[1].children[0]);
+      break;
+    case 24:
+      setStarEmpty(stars.children[1].children[0]);
+      break;
+    case 28:
+      setStarHalf(stars.children[0].children[0]);
+      break;
+    case 32:
+      setStarEmpty(stars.children[0].children[0]);
+      break;
   }
 }
 
-function setStar(node) {
-  node.classList.remove('fa-star-o');
-  node.classList.add('fa-star');
-  starCounter += 1;
+function setStarEmpty(node) {
+  node.classList.remove('fa-star');
+  node.classList.remove('fa-star-half-o');
+  node.classList.add('fa-star-o');
+  decrStarCounter();
 }
 
 function setStarHalf(node) {
+  node.classList.remove('fa-star');
   node.classList.remove('fa-star-o');
   node.classList.add('fa-star-half-o');
-  starCounter += 0.5;
+  decrStarCounter();
+}
+
+function decrStarCounter() {
+  starCounter -= 0.5;
 }
 
 function showResultPage() {
+  removeGame();
+  insertResultPage();
+}
+
+function removeGame() {
   const headerElement = document.querySelector('header');
   headerElement.parentElement.removeChild(headerElement);
   const scoreElement = document.querySelector('.score-panel');
   scoreElement.parentElement.removeChild(scoreElement);
   const deckElement = document.querySelector('.deck');
   deckElement.parentElement.removeChild(deckElement);
+}
+
+function insertResultPage() {
   const containerElement = document.querySelector('.container');
   const htmlTextToAdd =
     `<div class="result">
     <h2>Congratulations! You did it!</h2>
     <p >
-      With some Moves and Stars...
+      With <span class="moves"></span> Moves and <span class="starCounter"></span> Stars!
     </p>
       <button  name="button">Klick mich</button>
     </div>`
   containerElement.insertAdjacentHTML('afterbegin', htmlTextToAdd);
+  updateMoveCounter();
+  updateStarCounter();
+}
+
+function updateStarCounter() {
+  document.getElementsByClassName('starCounter')[0].textContent = starCounter;
 }
 
 function setCardClosed(element) {
@@ -188,6 +214,6 @@ function shuffle(array) {
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
   }
-
+  
   return array;
 }
