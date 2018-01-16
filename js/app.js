@@ -65,6 +65,7 @@ function startTimer() {
   timer = setInterval(countTimer, 1000);
 }
 
+// Timer function from www.w3schools.com, with changes
 function countTimer() {
   const time_shown = document.getElementById('realtime').textContent;
   const time_chunks = time_shown.split(":");
