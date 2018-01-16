@@ -1,6 +1,7 @@
 let openCards = new Array();
 let moveCounter = Number(0);
 let starCounter = Number(0);
+let timer = null;
 
 // setup the game
 function init() {
@@ -8,9 +9,9 @@ function init() {
   document.querySelector('.score-panel').classList.remove("hide");
   document.querySelector('.deck').classList.remove("hide");
   document.querySelector('.result').classList.add("hide");
-  initScorePanel();
   let newCardList = createNewDeck();
   insertNewDeck(newCardList);
+  initScorePanel();
 }
 
 function initScorePanel() {
@@ -22,6 +23,10 @@ function initScorePanel() {
   openCards = new Array();
   moveCounter = Number(0);
   starCounter = Number(3);
+  if (timer !== null) {
+    clearInterval(timer);
+  }
+  startTimer();
 }
 
 function createNewDeck() {
@@ -53,6 +58,37 @@ function removeCurrentDeck() {
         .firstChild);
     }
   }
+}
+
+function startTimer() {
+  document.getElementById('realtime').textContent = '00:00';
+  timer = setInterval(countTimer, 1000);
+}
+
+function countTimer() {
+  const time_shown = document.getElementById('realtime').textContent;
+  const time_chunks = time_shown.split(":");
+  let mins, secs;
+  mins = Number(time_chunks[0]);
+  secs = Number(time_chunks[1]);
+  secs++;
+  if (secs == 60) {
+    secs = 0;
+    mins = mins + 1;
+  }
+  if (mins == 60) {
+    mins = 0;
+  }
+  document.getElementById('realtime').textContent =
+    format(mins) + ":" + format(secs);
+}
+
+function format(digit) {
+  let zpad = digit + '';
+  if (digit < 10) {
+    zpad = '0' + zpad;
+  }
+  return zpad;
 }
 
 // Eventlistener for cards
@@ -97,7 +133,7 @@ function compareCards() {
         openCards[1].classList.add('match');
         openCards = new Array();
         if (allCardsMatched()) {
-          showResultPage();
+          showResult();
         }
       }, 500);
     } else {
@@ -112,10 +148,6 @@ function compareCards() {
 
 function incMoveCounter() {
   moveCounter += 1;
-  updateMoveCounter();
-}
-
-function updateMoveCounter() {
   document.getElementsByClassName('moves')[0].textContent = moveCounter;
 }
 
@@ -167,13 +199,15 @@ function decrStarCounter() {
   starCounter -= 0.5;
 }
 
-function showResultPage() {
+function showResult() {
+  clearInterval(timer);
   document.querySelector('header').classList.add("hide");
   document.querySelector('.score-panel').classList.add("hide");
   document.querySelector('.deck').classList.add("hide");
   document.querySelector('.result').classList.remove("hide");
-  updateMoveCounter();
+  document.getElementsByClassName('movesTotal')[0].textContent = moveCounter;
   updateStarCounter();
+  setEndTime();
   document.getElementById('play-btn').addEventListener('click', init);
 }
 
@@ -182,6 +216,11 @@ function updateStarCounter() {
   if (starCounter === 1) {
     document.getElementsByClassName('starText')[0].textContent = 'Star!';
   }
+}
+
+function setEndTime() {
+  document.getElementsByClassName('time')[0].textContent =
+    document.getElementById('realtime').textContent;
 }
 
 function setCardClosed(element) {
