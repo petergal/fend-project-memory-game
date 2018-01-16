@@ -4,6 +4,10 @@ let starCounter = Number(0);
 
 // setup the game
 function init() {
+  document.querySelector('header').classList.remove("hide");
+  document.querySelector('.score-panel').classList.remove("hide");
+  document.querySelector('.deck').classList.remove("hide");
+  document.querySelector('.result').classList.add("hide");
   initScorePanel();
   let newCardList = createNewDeck();
   insertNewDeck(newCardList);
@@ -57,7 +61,6 @@ document.getElementsByClassName('deck')[0].addEventListener('click',
 
 // Eventlistener for game reset
 document.getElementsByClassName('restart')[0].addEventListener('click', init);
-
 
 function cardClicked(evt) {
   if (timeoutRunning()) {
@@ -165,32 +168,13 @@ function decrStarCounter() {
 }
 
 function showResultPage() {
-  removeGame();
-  insertResultPage();
-}
-
-function removeGame() {
-  const headerElement = document.querySelector('header');
-  headerElement.parentElement.removeChild(headerElement);
-  const scoreElement = document.querySelector('.score-panel');
-  scoreElement.parentElement.removeChild(scoreElement);
-  const deckElement = document.querySelector('.deck');
-  deckElement.parentElement.removeChild(deckElement);
-}
-
-function insertResultPage() {
-  const containerElement = document.querySelector('.container');
-  const htmlTextToAdd =
-    `<div class="result">
-    <h2>Congratulations! You did it!</h2>
-    <p >
-      With <span class="moves"></span> Moves and <span class="starCounter"></span> <span class="starText">Stars!</span>
-    </p>
-      <button  name="button">Klick mich</button>
-    </div>`
-  containerElement.insertAdjacentHTML('afterbegin', htmlTextToAdd);
+  document.querySelector('header').classList.add("hide");
+  document.querySelector('.score-panel').classList.add("hide");
+  document.querySelector('.deck').classList.add("hide");
+  document.querySelector('.result').classList.remove("hide");
   updateMoveCounter();
   updateStarCounter();
+  document.getElementById('play-btn').addEventListener('click', init);
 }
 
 function updateStarCounter() {
@@ -198,7 +182,6 @@ function updateStarCounter() {
   if (starCounter === 1) {
     document.getElementsByClassName('starText')[0].textContent = 'Star!';
   }
-
 }
 
 function setCardClosed(element) {
