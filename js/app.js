@@ -2,6 +2,7 @@ let openCards = new Array();
 let moveCounter = Number(0);
 let starCounter = Number(0);
 let timer = null;
+init();
 
 // setup the game
 function init() {
