@@ -1,4 +1,5 @@
-let openCards = new Array();
+let openCards = new Array(2);
+let cardCounter = Number(0);
 let moveCounter = Number(0);
 let starCounter = Number(0);
 let timer = null;
@@ -21,7 +22,6 @@ function initScorePanel() {
     `<li><i class="fa fa-star"></i></li>
     <li><i class="fa fa-star"></i></li>
     <li><i class="fa fa-star"></i></li>`;
-  openCards = new Array();
   moveCounter = Number(0);
   starCounter = Number(3);
   if (timer !== null) {
@@ -93,60 +93,54 @@ function format(digit) {
   return zpad;
 }
 
-// Eventlistener for cards
+/**
+ * Event listener definition and implementation of event handler function for card click events.
+ */
 document.getElementsByClassName('deck')[0].addEventListener('click',
-  cardClicked);
-
-// Eventlistener for game reset
-document.getElementsByClassName('restart')[0].addEventListener('click', init);
-
-function cardClicked(evt) {
-  if (timeoutRunning()) {
-    return;
-  }
-  showCard(evt);
-  saveCard(evt.target);
-  compareCards();
-}
-
-function timeoutRunning() {
-  if (openCards.length === 2) {
-    return true;
-  }
-}
-
-function showCard(evt) {
-  evt.target.classList.add('open');
-  evt.target.classList.add('show');
-}
-
-function saveCard(cardElement) {
-  openCards.push(cardElement);
-}
-
-function compareCards() {
-  if (openCards.length === 2) {
-    incMoveCounter();
-    setScorePanel();
-    if (openCards[0].firstElementChild.className === openCards[1].firstElementChild
-      .className) {
-      setTimeout(function setMatched() {
-        openCards[0].classList.add('match');
-        openCards[1].classList.add('match');
-        openCards = new Array();
-        if (allCardsMatched()) {
-          showResult();
+  function(event) {
+    /**
+     * Event target element
+     * @type {object}
+     */
+    let cardElement = event.target.closest('LI');
+    /** Validate wheter card can be processed. */
+    if ((cardElement.nodeName === 'LI') && (cardCounter < 2) && !(cardElement
+        .classList.contains('open'))) {
+      cardCounter++;
+      cardElement.classList.add('open');
+      cardElement.classList.add('show');
+      /** One card openend. Save the card. */
+      if (cardCounter === 1) {
+        openCards[0] = cardElement;
+      } else {
+        openCards[1] = cardElement;
+        /** Two cards openend and match. */
+        if (openCards[0].firstElementChild.className === openCards[1].firstElementChild
+          .className) {
+          openCards[0].classList.add('match');
+          openCards[1].classList.add('match');
+          cardCounter = 0;
+          /** Show result page if all cards matched. */
+          if (document.getElementsByClassName('match').length === 16) {
+            showResultPage();
+          }
+          /** Two cards opened and do not match. */
+        } else {
+          setTimeout(function closeCards() {
+            openCards.forEach(function(card) {
+              card.classList.remove('open');
+              card.classList.remove('show');
+            });
+            cardCounter = 0;
+          }, 900);
         }
-      }, 500);
-    } else {
-      setTimeout(function closeCards() {
-        setCardClosed(openCards[0]);
-        setCardClosed(openCards[1]);
-        openCards = new Array();
-      }, 900);
+        incMoveCounter();
+        setScorePanel();
+      }
     }
-  }
-}
+  });
+
+document.getElementsByClassName('restart')[0].addEventListener('click', init);
 
 function incMoveCounter() {
   moveCounter += 1;
@@ -201,7 +195,7 @@ function decrStarCounter() {
   starCounter -= 0.5;
 }
 
-function showResult() {
+function showResultPage() {
   clearInterval(timer);
   document.querySelector('header').classList.add("hide");
   document.querySelector('.score-panel').classList.add("hide");
@@ -223,11 +217,6 @@ function updateStarCounter() {
 function setEndTime() {
   document.getElementsByClassName('time')[0].textContent =
     document.getElementById('realtime').textContent;
-}
-
-function setCardClosed(element) {
-  element.classList.remove('open');
-  element.classList.remove('show');
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
