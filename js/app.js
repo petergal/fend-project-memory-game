@@ -2,7 +2,11 @@ let openCards = new Array(2);
 let cardCounter = Number(0);
 let moveCounter = Number(0);
 let starCounter = Number(0);
-let timer = null;
+/**
+ * Id of game timer.
+ * @type {Number}
+ */
+let intervalId = null;
 init();
 
 // setup the game
@@ -24,10 +28,11 @@ function initScorePanel() {
     <li><i class="fa fa-star"></i></li>`;
   moveCounter = Number(0);
   starCounter = Number(3);
-  if (timer !== null) {
-    clearInterval(timer);
+  if (intervalId !== null) {
+    clearInterval(intervalId);
+    intervalId = null;
   }
-  startTimer();
+  document.getElementById('realtime').textContent = '00:00';
 }
 
 function createNewDeck() {
@@ -59,11 +64,6 @@ function removeCurrentDeck() {
         .firstChild);
     }
   }
-}
-
-function startTimer() {
-  document.getElementById('realtime').textContent = '00:00';
-  timer = setInterval(countTimer, 1000);
 }
 
 // Timer function from www.w3schools.com, with changes
@@ -104,8 +104,13 @@ document.getElementsByClassName('deck')[0].addEventListener('click',
      */
     let cardElement = event.target.closest('LI');
     /** Validate wheter card can be processed. */
-    if ((cardElement.nodeName === 'LI') && (cardCounter < 2) && !(cardElement
-        .classList.contains('open'))) {
+    if ((cardElement.nodeName !== null) && (cardElement.nodeName === 'LI') &&
+      (cardCounter < 2) && !(cardElement.classList.contains('open'))) {
+      /** Start timer at first card click. */
+      if (intervalId === null) {
+        document.getElementById('realtime').textContent = '00:00';
+        intervalId = setInterval(countTimer, 1000);
+      }
       cardCounter++;
       cardElement.classList.add('open');
       cardElement.classList.add('show');
@@ -120,8 +125,11 @@ document.getElementsByClassName('deck')[0].addEventListener('click',
           openCards[0].classList.add('match');
           openCards[1].classList.add('match');
           cardCounter = 0;
-          /** Show result page if all cards matched. */
+          /** All cards matched/game end. */
           if (document.getElementsByClassName('match').length === 16) {
+            /** Stop the timer. */
+            clearInterval(intervalId);
+            intervalId = null;
             showResultPage();
           }
           /** Two cards opened and do not match. */
@@ -196,7 +204,6 @@ function decrStarCounter() {
 }
 
 function showResultPage() {
-  clearInterval(timer);
   document.querySelector('header').classList.add("hide");
   document.querySelector('.score-panel').classList.add("hide");
   document.querySelector('.deck').classList.add("hide");
