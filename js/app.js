@@ -90,6 +90,8 @@ function removeCurrentDeck() {
  * Initialize move counter, star counter, star symbols and the timer.
  */
 function initScorePanel() {
+  openCards = new Array(2);
+  cardCounter = Number(0);
   moveCounter = Number(0);
   document.getElementsByClassName('moves')[0].textContent = 0;
   starCounter = Number(3);
