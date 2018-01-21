@@ -99,7 +99,9 @@ function initScorePanel() {
     `<li><i class="fa fa-star"></i></li>
     <li><i class="fa fa-star"></i></li>
     <li><i class="fa fa-star"></i></li>`;
-  clearInterval(intervalId);
+  if (intervalId !== null) {
+    clearInterval(intervalId);
+  }
   intervalId = null;
   document.getElementById('realtime').textContent = '00:00';
 }
