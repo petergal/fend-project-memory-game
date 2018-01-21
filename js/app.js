@@ -1,5 +1,21 @@
+/**
+ * @fileOverview Javascript file of Memory Game Project.
+ * @author <a href="mailto:petergalch@mac.com">Peter Gal</a>
+ */
+/**
+ * Array for holding two open cards (one move).
+ * @type {Array}
+ */
 let openCards = new Array(2);
+/**
+ * Counter of currently opened cards.
+ * @type {Number}
+ */
 let cardCounter = Number(0);
+/**
+ * Counter for moves the player makes.
+ * @type {Number}
+ */
 let moveCounter = Number(0);
 /**
  * Counter for star rating.
@@ -27,21 +43,10 @@ function init() {
   document.querySelector('.result').classList.add("hide");
 }
 
-function initScorePanel() {
-  document.getElementsByClassName('moves')[0].textContent = 0;
-  document.querySelector('.stars').innerHTML =
-    `<li><i class="fa fa-star"></i></li>
-    <li><i class="fa fa-star"></i></li>
-    <li><i class="fa fa-star"></i></li>`;
-  moveCounter = Number(0);
-  starCounter = Number(3);
-  if (intervalId !== null) {
-    clearInterval(intervalId);
-    intervalId = null;
-  }
-  document.getElementById('realtime').textContent = '00:00';
-}
-
+/**
+ * Shuffle the cards.
+ * @return {object} all card elements
+ */
 function createNewDeck() {
   const cardList = shuffle([...document.getElementsByClassName('card')]);
   const newCardList = new Array();
@@ -54,6 +59,11 @@ function createNewDeck() {
   return newCardList;
 }
 
+/**
+ * Append card elements to parent element deck.
+ * @param  {object} newCardList
+ * @return {[type]}
+ */
 function insertNewDeck(newCardList) {
   const fragment = document.createDocumentFragment();
   newCardList.forEach(function(element) {
@@ -63,6 +73,9 @@ function insertNewDeck(newCardList) {
   document.querySelector('.deck').appendChild(fragment);
 }
 
+/**
+ * Remove current deck.
+ */
 function removeCurrentDeck() {
   if (document.querySelector('.deck') !== null) {
     while (document.querySelector('.deck').firstChild) {
@@ -73,7 +86,25 @@ function removeCurrentDeck() {
   }
 }
 
-// Timer function from www.w3schools.com, with changes
+/**
+ * Initialize move counter, star counter, star symbols and the timer.
+ */
+function initScorePanel() {
+  moveCounter = Number(0);
+  document.getElementsByClassName('moves')[0].textContent = 0;
+  starCounter = Number(3);
+  document.querySelector('.stars').innerHTML =
+    `<li><i class="fa fa-star"></i></li>
+    <li><i class="fa fa-star"></i></li>
+    <li><i class="fa fa-star"></i></li>`;
+  clearInterval(intervalId);
+  intervalId = null;
+  document.getElementById('realtime').textContent = '00:00';
+}
+
+/**
+ * Timer function from www.w3schools.com, with changes
+ */
 function countTimer() {
   const time_shown = document.getElementById('realtime').textContent;
   const time_chunks = time_shown.split(":");
@@ -92,6 +123,11 @@ function countTimer() {
     format(mins) + ":" + format(secs);
 }
 
+/**
+ * Format function as part of the timer function.
+ * @param  {Number} digit
+ * @return {Number} formatted digit
+ */
 function format(digit) {
   let zpad = digit + '';
   if (digit < 10) {
@@ -121,10 +157,11 @@ document.getElementsByClassName('deck')[0].addEventListener('click',
       cardCounter++;
       cardElement.classList.add('open');
       cardElement.classList.add('show');
-      /** One card openend. Save the card. */
+      /** One card opened. Save the card. */
       if (cardCounter === 1) {
         openCards[0] = cardElement;
       } else {
+        /** Two cards opened */
         openCards[1] = cardElement;
         /** Two cards openend and match. */
         if (openCards[0].firstElementChild.className === openCards[1].firstElementChild
@@ -154,10 +191,13 @@ document.getElementsByClassName('deck')[0].addEventListener('click',
     }
   });
 
+/**
+ * Event listener definition for restart function.
+ */
 document.getElementsByClassName('restart')[0].addEventListener('click', init);
 
 /**
- * Update Moves and Stars.
+ * Update score (moves and stars) after one move.
  */
 function updateScore() {
   moveCounter += 1;
@@ -184,27 +224,22 @@ function setStarEmpty(node) {
   node.classList.add('fa-star-o');
 }
 
+/**
+ * Show result page (and hide game part).
+ */
 function showResultPage() {
-  document.querySelector('header').classList.add("hide");
-  document.querySelector('.score-panel').classList.add("hide");
-  document.querySelector('.deck').classList.add("hide");
-  document.querySelector('.result').classList.remove("hide");
   document.getElementsByClassName('movesTotal')[0].textContent = moveCounter;
-  updateStarCounter();
-  setEndTime();
-  document.getElementById('play-btn').addEventListener('click', init);
-}
-
-function updateStarCounter() {
   document.getElementsByClassName('starCounter')[0].textContent = starCounter;
   if (starCounter === 1) {
     document.getElementsByClassName('starText')[0].textContent = 'Star!';
   }
-}
-
-function setEndTime() {
   document.getElementsByClassName('time')[0].textContent =
     document.getElementById('realtime').textContent;
+  document.getElementById('play-btn').addEventListener('click', init);
+  document.querySelector('header').classList.add("hide");
+  document.querySelector('.score-panel').classList.add("hide");
+  document.querySelector('.deck').classList.add("hide");
+  document.querySelector('.result').classList.remove("hide");
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
