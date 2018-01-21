@@ -1,6 +1,10 @@
 let openCards = new Array(2);
 let cardCounter = Number(0);
 let moveCounter = Number(0);
+/**
+ * Counter for star rating.
+ * @type {Number}
+ */
 let starCounter = Number(0);
 /**
  * Id of game timer.
@@ -9,15 +13,18 @@ let starCounter = Number(0);
 let intervalId = null;
 init();
 
-// setup the game
+/**
+ * Setup the game.
+ */
 function init() {
+  let newCardList = createNewDeck();
+  insertNewDeck(newCardList);
+  initScorePanel();
+  /** Show game and hide result page */
   document.querySelector('header').classList.remove("hide");
   document.querySelector('.score-panel').classList.remove("hide");
   document.querySelector('.deck').classList.remove("hide");
   document.querySelector('.result').classList.add("hide");
-  let newCardList = createNewDeck();
-  insertNewDeck(newCardList);
-  initScorePanel();
 }
 
 function initScorePanel() {
@@ -142,65 +149,39 @@ document.getElementsByClassName('deck')[0].addEventListener('click',
             cardCounter = 0;
           }, 900);
         }
-        incMoveCounter();
-        setScorePanel();
+        updateScore();
       }
     }
   });
 
 document.getElementsByClassName('restart')[0].addEventListener('click', init);
 
-function incMoveCounter() {
+/**
+ * Update Moves and Stars.
+ */
+function updateScore() {
   moveCounter += 1;
   document.getElementsByClassName('moves')[0].textContent = moveCounter;
-}
-
-function allCardsMatched() {
-  if (document.getElementsByClassName('match').length === 16) {
-    return true;
-  }
-}
-
-function setScorePanel() {
   let stars = document.getElementsByClassName('stars')[0];
   switch (moveCounter) {
-    case 12:
-      setStarHalf(stars.children[2].children[0]);
-      break;
     case 16:
       setStarEmpty(stars.children[2].children[0]);
-      break;
-    case 20:
-      setStarHalf(stars.children[1].children[0]);
+      starCounter = 2;
       break;
     case 24:
       setStarEmpty(stars.children[1].children[0]);
-      break;
-    case 28:
-      setStarHalf(stars.children[0].children[0]);
-      break;
-    case 32:
-      setStarEmpty(stars.children[0].children[0]);
+      starCounter = 1;
       break;
   }
 }
 
+/**
+ * Set star symbol open.
+ * @param {[type]} node star
+ */
 function setStarEmpty(node) {
   node.classList.remove('fa-star');
-  node.classList.remove('fa-star-half-o');
   node.classList.add('fa-star-o');
-  decrStarCounter();
-}
-
-function setStarHalf(node) {
-  node.classList.remove('fa-star');
-  node.classList.remove('fa-star-o');
-  node.classList.add('fa-star-half-o');
-  decrStarCounter();
-}
-
-function decrStarCounter() {
-  starCounter -= 0.5;
 }
 
 function showResultPage() {
