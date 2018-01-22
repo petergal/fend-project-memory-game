@@ -8,17 +8,18 @@
  */
 let openCards = new Array(2);
 /**
- * Counter of currently opened cards.
+ * Currently opened cards.
  * @type {Number}
  */
 let cardCounter = Number(0);
 /**
- * Counter for moves the player makes.
+ * Moves the player makes. Used for the score panel and calculation of the star rating and
+ * starCounter.
  * @type {Number}
  */
 let moveCounter = Number(0);
 /**
- * Counter for star rating.
+ * Used to display the star rating on the result page.
  * @type {Number}
  */
 let starCounter = Number(0);
@@ -30,7 +31,7 @@ let intervalId = null;
 init();
 
 /**
- * Setup the game.
+ * Initialize the game.
  */
 function init() {
   let newCardList = createNewDeck();
@@ -44,7 +45,7 @@ function init() {
 }
 
 /**
- * Shuffle the cards.
+ * Shuffle the cards ('LI' elements).
  * @return {object} all card elements
  */
 function createNewDeck() {
@@ -62,7 +63,6 @@ function createNewDeck() {
 /**
  * Append card elements to parent element deck.
  * @param  {object} newCardList
- * @return {[type]}
  */
 function insertNewDeck(newCardList) {
   const fragment = document.createDocumentFragment();
@@ -87,7 +87,7 @@ function removeCurrentDeck() {
 }
 
 /**
- * Initialize move counter, star counter, star symbols and the timer.
+ * Initialize the score panel with move counter, star counter, star symbols and the timer.
  */
 function initScorePanel() {
   openCards = new Array(2);
@@ -130,7 +130,7 @@ function countTimer() {
 /**
  * Format function as part of the timer function.
  * @param  {Number} digit
- * @return {Number} formatted digit
+ * @return {string} formatted digit
  */
 function format(digit) {
   let zpad = digit + '';
@@ -150,7 +150,7 @@ document.getElementsByClassName('deck')[0].addEventListener('click',
      * @type {object}
      */
     let cardElement = event.target.closest('LI');
-    /** Validate wheter card can be processed. */
+    /** Validate a click event. */
     if ((cardElement.nodeName !== null) && (cardElement.nodeName === 'LI') &&
       (cardCounter < 2) && !(cardElement.classList.contains('open'))) {
       /** Start timer at first card click. */
@@ -161,11 +161,11 @@ document.getElementsByClassName('deck')[0].addEventListener('click',
       cardCounter++;
       cardElement.classList.add('open');
       cardElement.classList.add('show');
-      /** One card opened. Save the card. */
+      /** One card opened. */
       if (cardCounter === 1) {
         openCards[0] = cardElement;
-      } else {
         /** Two cards opened */
+      } else {
         openCards[1] = cardElement;
         /** Two cards openend and match. */
         if (openCards[0].firstElementChild.className === openCards[1].firstElementChild
@@ -190,6 +190,7 @@ document.getElementsByClassName('deck')[0].addEventListener('click',
             cardCounter = 0;
           }, 900);
         }
+        /** Update score after every move. */
         updateScore();
       }
     }
@@ -201,7 +202,7 @@ document.getElementsByClassName('deck')[0].addEventListener('click',
 document.getElementsByClassName('restart')[0].addEventListener('click', init);
 
 /**
- * Update score (moves and stars) after one move.
+ * Update score (moves and stars) after one move and set the star counter.
  */
 function updateScore() {
   moveCounter += 1;
@@ -221,7 +222,7 @@ function updateScore() {
 
 /**
  * Set star symbol open.
- * @param {[type]} node star
+ * @param {object} node star
  */
 function setStarEmpty(node) {
   node.classList.remove('fa-star');
@@ -236,9 +237,12 @@ function showResultPage() {
   document.getElementsByClassName('starCounter')[0].textContent = starCounter;
   if (starCounter === 1) {
     document.getElementsByClassName('starText')[0].textContent = 'Star!';
+  } else {
+    document.getElementsByClassName('starText')[0].textContent = 'Stars!';
   }
   document.getElementsByClassName('time')[0].textContent =
     document.getElementById('realtime').textContent;
+  /** Event listener definition for 'Play again' button. */
   document.getElementById('play-btn').addEventListener('click', init);
   document.querySelector('header').classList.add("hide");
   document.querySelector('.score-panel').classList.add("hide");
