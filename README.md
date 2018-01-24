@@ -29,8 +29,7 @@ You need connection to the internet to start the game:
 - [Font Coda](https://fonts.google.com/specimen/Coda) is provided by Google Fonts.
 
 ### Resources used to develop the game
-
-- `index.html` including external stylesheets ([see game dependencies](## Game dependencies) above)
+- `index.html` including external stylesheets (see [Game dependencies](#game-dependencies) above)
 - `js/app.js`, including:
   - shuffle function from [stackoverflow.com](https://stackoverflow.com/a/2450976)
   - timer function from [www.w3schools.com](https://www.w3schools.com)
