@@ -6,23 +6,23 @@
  * Array for holding two open cards (one move).
  * @type {Array}
  */
-let openCards = new Array(2);
+let openCards = [];
 /**
  * Currently opened cards.
  * @type {Number}
  */
-let cardCounter = Number(0);
+let cardCounter = 0;
 /**
  * Moves the player makes. Used for the score panel and calculation of the star rating and
  * starCounter.
  * @type {Number}
  */
-let moveCounter = Number(0);
+let moveCounter = 0;
 /**
  * Used to display the star rating on the result page.
  * @type {Number}
  */
-let starCounter = Number(0);
+let starCounter = 0;
 /**
  * Id of game timer.
  * @type {Number}
@@ -35,7 +35,7 @@ init();
  * Shuffle the cards and initialize the score panel.
  */
 function init() {
-  let newCardList = createNewDeck();
+  const newCardList = createNewDeck();
   insertNewDeck(newCardList);
   initScorePanel();
   // Show game and hide result page
@@ -154,7 +154,7 @@ document.getElementsByClassName('deck')[0].addEventListener('click',
      * Event target element
      * @type {object}
      */
-    let cardElement = event.target.closest('LI');
+    const cardElement = event.target.closest('LI');
     // Validate a click event
     if ((cardElement.nodeName !== null) && (cardElement.nodeName === 'LI') &&
       (cardCounter < 2) && !(cardElement.classList.contains('open'))) {
@@ -214,7 +214,7 @@ document.getElementsByClassName('restart')[0].addEventListener('click', init);
 function updateScore() {
   moveCounter += 1;
   document.getElementsByClassName('moves')[0].textContent = moveCounter;
-  let stars = document.getElementsByClassName('stars')[0];
+  const stars = document.getElementsByClassName('stars')[0];
   switch (moveCounter) {
     case 16:
       setStarEmpty(stars.children[2].children[0]);
@@ -261,7 +261,7 @@ function showResultPage() {
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-  var currentIndex = array.length,
+  let currentIndex = array.length,
     temporaryValue, randomIndex;
 
   while (currentIndex !== 0) {
